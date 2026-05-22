@@ -1,0 +1,31 @@
+{
+  "name": "@chorono/runtime",
+  "version": "0.1.0",
+  "description": "Framework-free runtime player for Chorono animations — play exported scenes on the web with the same engine as the editor.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "dist/chorono-runtime.js",
+  "module": "dist/chorono-runtime.mjs",
+  "types": "dist/chorono-runtime.d.ts",
+  "unpkg": "dist/chorono-runtime.global.js",
+  "jsdelivr": "dist/chorono-runtime.global.js",
+  "exports": {
+    ".": {
+      "types": "./dist/chorono-runtime.d.ts",
+      "import": "./dist/chorono-runtime.mjs",
+      "require": "./dist/chorono-runtime.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "keywords": [
+    "chorono",
+    "animation",
+    "runtime",
+    "player",
+    "canvas",
+    "state-machine"
+  ]
+}
