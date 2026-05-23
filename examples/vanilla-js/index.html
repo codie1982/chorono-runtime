@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chorono Runtime - Vanilla JS Example</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Chorono Runtime</h1>
+    <p>Vanilla JavaScript Example</p>
+
+    <div class="player-wrapper">
+      <canvas id="player" width="800" height="600"></canvas>
+    </div>
+
+    <div class="controls">
+      <button id="playBtn" class="btn btn-primary">Play</button>
+      <button id="pauseBtn" class="btn">Pause</button>
+      <button id="stopBtn" class="btn">Stop</button>
+      <span class="spacer"></span>
+      <span id="time" class="time">0.00s / 3.00s</span>
+    </div>
+
+    <div class="slider-container">
+      <label for="timeline">Timeline:</label>
+      <input type="range" id="timeline" min="0" max="3000" value="0">
+    </div>
+
+    <div class="params">
+      <h3>Parameters</h3>
+      <div class="param-input">
+        <label for="userName">User Name:</label>
+        <input type="text" id="userName" placeholder="Enter name" value="Guest">
+      </div>
+      <div class="param-input">
+        <label for="score">Score:</label>
+        <input type="number" id="score" placeholder="Enter score" value="0">
+      </div>
+    </div>
+
+    <div class="info">
+      <h3>Events</h3>
+      <div id="events" class="event-log"></div>
+      <button id="clearEvents" class="btn btn-small">Clear</button>
+    </div>
+  </div>
+
+  <!-- CDN Script -->
+  <script src="https://unpkg.com/@chorono/runtime@0.1.0/dist/chorono-runtime.global.js"></script>
+
+  <!-- Scene Data (normally loaded from file) -->
+  <script src="./scene.js"></script>
+
+  <!-- Application -->
+  <script src="./main.js"></script>
+</body>
+</html>

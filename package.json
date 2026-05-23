@@ -2,7 +2,7 @@
   "name": "@chorono/runtime",
   "version": "0.1.0",
   "description": "Framework-free runtime player for Chorono animations — play exported scenes on the web with the same engine as the editor.",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "main": "dist/chorono-runtime.js",
   "module": "dist/chorono-runtime.mjs",

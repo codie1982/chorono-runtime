@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chorono - Asset & Media Handling</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    h1 { color: #333; }
+    canvas {
+      width: 100%;
+      max-width: 800px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      display: block;
+      margin: 20px 0;
+    }
+    .section {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+    .section h3 {
+      margin-top: 0;
+      color: #333;
+    }
+    .asset-list {
+      list-style: none;
+      padding: 0;
+    }
+    .asset-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+    .asset-list li:last-child {
+      border-bottom: none;
+    }
+    .asset-type {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      margin-right: 8px;
+    }
+    .info {
+      background: #e8f4f8;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Chorono Runtime - Asset & Media Handling</h1>
+
+    <canvas id="canvas" width="800" height="600"></canvas>
+
+    <div class="section">
+      <h3>Asset Types Supported</h3>
+      <ul class="asset-list">
+        <li><span class="asset-type">image</span>PNG, JPG, WebP, GIF</li>
+        <li><span class="asset-type">video</span>MP4, WebM, OGG</li>
+        <li><span class="asset-type">audio</span>MP3, WAV, OGG</li>
+        <li><span class="asset-type">font</span>TTF, OTF, WOFF, WOFF2</li>
+        <li><span class="asset-type">svg</span>Scalable Vector Graphics</li>
+        <li><span class="asset-type">lottie</span>Lottie Animation</li>
+        <li><span class="asset-type">spriteSheet</span>Grid-based Frame Animations</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Asset Storage Modes</h3>
+      <ul class="asset-list">
+        <li><strong>Embedded:</strong> Base64-encoded in scene JSON</li>
+        <li><strong>External:</strong> URL to CDN or server</li>
+        <li><strong>Project-relative:</strong> Part of exported scene package</li>
+        <li><strong>Remote:</strong> Loaded from remote URL at runtime</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Best Practices</h3>
+      <ul style="margin: 0;">
+        <li>Preload assets before playback for smooth animation</li>
+        <li>Use external assets for large files (videos, high-res images)</li>
+        <li>Embed small assets to reduce HTTP requests</li>
+        <li>Optimize image formats (WebP for modern browsers)</li>
+        <li>Handle loading errors with fallbacks</li>
+      </ul>
+    </div>
+
+    <div class="info">
+      <strong>Asset & Media Example:</strong> This example demonstrates how @chorono/runtime
+      handles different asset types and storage modes. Check the scene definition to see
+      how assets are configured.
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/@chorono/runtime@0.1.0/dist/chorono-runtime.global.js"></script>
+  <script>
+    // Scene with asset definitions
+    const scene = {
+      id: 'assets-demo',
+      name: 'Asset & Media Handling',
+      durationMs: 3000,
+      width: 800,
+      height: 600,
+      layers: [],
+      timelines: [],
+      assets: [
+        {
+          id: 'img-logo',
+          name: 'Logo',
+          type: 'image',
+          url: 'https://via.placeholder.com/200',
+          storage: {
+            mode: 'remote',
+            uri: 'https://via.placeholder.com/200'
+          }
+        },
+        {
+          id: 'font-main',
+          name: 'Main Font',
+          type: 'font',
+          storage: {
+            mode: 'external',
+            uri: 'https://fonts.googleapis.com/css?family=Roboto'
+          }
+        }
+      ]
+    }
+
+    const canvas = document.getElementById('canvas')
+    const ctx = canvas.getContext('2d')
+
+    const Chorono = window.Chorono
+    const adapter = new Chorono.CanvasRenderAdapter(ctx)
+    const player = new Chorono.ChronoPlayer(scene, adapter)
+
+    console.log('Asset example loaded. Scene contains:')
+    console.log(`- ${scene.assets.length} assets defined`)
+    console.log('Asset types:', scene.assets.map(a => a.type).join(', '))
+  </script>
+</body>
+</html>

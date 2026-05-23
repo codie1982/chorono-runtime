@@ -1,0 +1,284 @@
+<template>
+  <div class="app">
+    <div class="container">
+      <h1>Chorono Runtime</h1>
+      <p>Vue 3 Composition API Example</p>
+
+      <div class="player-wrapper">
+        <ChronoPlayer
+          ref="playerComponentRef"
+          :scene="scene"
+          :options="{ loop: false }"
+          @ready="handlePlayerReady"
+          width="800"
+          height="600"
+        />
+      </div>
+
+      <div class="controls">
+        <button @click="play" :disabled="isPlaying" class="btn btn-primary">
+          Play
+        </button>
+        <button @click="pause" :disabled="!isPlaying" class="btn">
+          Pause
+        </button>
+        <button @click="stop" class="btn">Stop</button>
+        <span class="spacer"></span>
+        <span class="time">{{ (currentTime / 1000).toFixed(2) }}s / {{ (duration / 1000).toFixed(2) }}s</span>
+      </div>
+
+      <div class="slider-container">
+        <label for="timeline">Timeline:</label>
+        <input
+          id="timeline"
+          type="range"
+          :min="0"
+          :max="duration"
+          :value="currentTime"
+          @input="seek"
+          class="timeline-slider"
+        />
+      </div>
+
+      <div class="params">
+        <h3>Parameters</h3>
+        <div class="param-input">
+          <label for="userName">User Name:</label>
+          <input
+            id="userName"
+            v-model="userName"
+            type="text"
+            @change="updateUserName"
+          />
+        </div>
+        <div class="param-input">
+          <label for="score">Score:</label>
+          <input
+            id="score"
+            v-model.number="score"
+            type="number"
+            @change="updateScore"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { ChronoPlayer as ChronoPlayerClass } from '@chorono/runtime'
+import ChronoPlayer from './ChronoPlayer.vue'
+
+// Example scene
+const scene = {
+  id: 'vue-demo-scene',
+  name: 'Vue Demo',
+  durationMs: 3000,
+  width: 800,
+  height: 600,
+  backgroundColor: '#ffffff',
+  parameters: [
+    { id: 'p1', name: 'userName', defaultValue: 'Guest' },
+    { id: 'p2', name: 'score', defaultValue: 0 }
+  ],
+  layers: [],
+  timelines: [],
+  stateMachines: [],
+  assets: []
+}
+
+const playerComponentRef = ref<InstanceType<typeof ChronoPlayer> | null>(null)
+let player: ChronoPlayerClass | null = null
+
+const isPlaying = ref(false)
+const currentTime = ref(0)
+const duration = ref(0)
+const userName = ref('Guest')
+const score = ref(0)
+
+const handlePlayerReady = (readyPlayer: ChronoPlayerClass) => {
+  player = readyPlayer
+  duration.value = player.durationMs
+
+  player.on('tick', ({ currentTimeMs }) => {
+    currentTime.value = currentTimeMs
+  })
+
+  player.on('play', () => {
+    isPlaying.value = true
+  })
+
+  player.on('pause', () => {
+    isPlaying.value = false
+  })
+
+  player.on('stop', () => {
+    isPlaying.value = false
+    currentTime.value = 0
+  })
+}
+
+const play = () => player?.play()
+const pause = () => player?.pause()
+const stop = () => player?.stop()
+
+const seek = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  const timeMs = parseFloat(target.value)
+  player?.seek(timeMs)
+  currentTime.value = timeMs
+}
+
+const updateUserName = () => {
+  player?.setParam('userName', userName.value)
+}
+
+const updateScore = () => {
+  player?.setParam('score', score.value)
+}
+</script>
+
+<style scoped>
+.app {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  padding: 40px;
+  max-width: 900px;
+  width: 100%;
+}
+
+h1 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+> p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.player-wrapper {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  padding: 20px;
+  text-align: center;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #5568d3;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.time {
+  color: #666;
+  font-weight: 500;
+}
+
+.slider-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.slider-container label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.timeline-slider {
+  flex: 1;
+  height: 6px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.params {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.params h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.param-input {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.param-input label {
+  min-width: 100px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.param-input input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.param-input input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+</style>
