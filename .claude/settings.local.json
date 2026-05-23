@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm publish *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'chore: add publishConfig for scoped npm package *)",
+      "Bash(git push *)"
+    ]
+  }
+}
